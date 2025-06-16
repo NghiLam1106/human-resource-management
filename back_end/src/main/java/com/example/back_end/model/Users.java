@@ -1,11 +1,13 @@
 package com.example.back_end.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "users")
 public class Users {
@@ -15,7 +17,9 @@ public class Users {
     private Integer id;
 
     private String username;
-    private String password_hash;
-    private Integer employee_id;
+    private String password;
 
+    @ManyToOne
+    @JoinColumn(name = "role_id", nullable = false)
+    private Role role;
 }
