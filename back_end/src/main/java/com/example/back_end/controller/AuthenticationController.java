@@ -22,7 +22,7 @@ public class AuthenticationController {
         var token = authenticationService.login(request);
         return ApiResponse.<LoginResponse>builder()
                 .result(LoginResponse.builder()
-                    .accessToken(token.getAccessToken())
+                    .access_token(token.getAccess_token())
                     .accessTokenType(token.getAccessTokenType())
                     .build())
             .build();
@@ -31,7 +31,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     ApiResponse<RegisterResponse> register(@RequestBody RegisterRequest userCreateDto) {
         var user = authenticationService.register(userCreateDto);
-        return ApiResponse.<RegisterResponse>builder()
+            return ApiResponse.<RegisterResponse>builder()
                 .result(RegisterResponse.builder()
                     .username(user.getUsername())
                     .id(user.getId())

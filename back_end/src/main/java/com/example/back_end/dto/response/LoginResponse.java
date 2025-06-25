@@ -9,10 +9,10 @@ import lombok.experimental.FieldDefaults;
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
-    String accessToken;
+    String access_token;
     String accessTokenType = "Bearer ";
 
-    public LoginResponse(String accessToken) {
-        this.accessToken = accessToken;
+    public LoginResponse(String access_token) {
+        this.access_token = access_token;
     }
 }
