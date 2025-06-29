@@ -23,6 +23,7 @@ public class AuthenticationController {
         return ApiResponse.<LoginResponse>builder()
                 .result(LoginResponse.builder()
                     .access_token(token.getAccess_token())
+                    .refresh_token(token.getRefresh_token())
                     .accessTokenType(token.getAccessTokenType())
                     .build())
             .build();
@@ -36,6 +37,14 @@ public class AuthenticationController {
                     .username(user.getUsername())
                     .id(user.getId())
                     .build())
+            .build();
+    }
+
+    @PostMapping("/refresh-token")
+    ApiResponse<String> refreshToken(@RequestBody String refreshToken) {
+        var token = authenticationService.refreshToken(refreshToken);
+        return ApiResponse.<String>builder()
+                .result(token)
             .build();
     }
 }

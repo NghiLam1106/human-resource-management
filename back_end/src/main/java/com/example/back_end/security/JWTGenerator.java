@@ -3,8 +3,6 @@ package com.example.back_end.security;
 import com.auth0.jwt.algorithms.Algorithm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
@@ -16,13 +14,22 @@ public class JWTGenerator {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    public String generateToken(Authentication authentication) {
-        String username = authentication.getName();
+    public String generateToken(String username) {
         Date currentDate = new Date();
         Date expirationDate = new Date(currentDate.getTime() + SecurityConstants.JWT_EXPIRATION);
         return JWT.create()
                 .withSubject(username)
                 .withIssuedAt(currentDate)
+                .withExpiresAt(expirationDate)
+                .sign(Algorithm.HMAC256(jwtSecret));
+    }
+
+    public String generateRefreshToken(String username) {
+        Date currentDate = new Date();
+        Date expirationDate = new Date(currentDate.getTime() + SecurityConstants.JWT_REFRESH_EXPIRATION);
+        return JWT.create()
+                .withSubject(username)
+                .withClaim("type", "refresh")
                 .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(jwtSecret));
     }
@@ -42,6 +49,17 @@ public class JWTGenerator {
             return true;
         } catch (Exception e) {
             throw new AuthenticationCredentialsNotFoundException("Invalid JWT token: " + e.getMessage());
+        }
+    }
+
+    public boolean validateRefreshToken(String token) {
+        try {
+            JWT.require(Algorithm.HMAC256(jwtSecret))
+                    .build()
+                    .verify(token);
+            return true;
+        } catch (Exception e) {
+            throw new AuthenticationCredentialsNotFoundException("Invalid Refresh token: " + e.getMessage());
         }
     }
 }

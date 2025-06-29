@@ -10,9 +10,11 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class LoginResponse {
     String access_token;
+    String refresh_token;
     String accessTokenType = "Bearer ";
 
-    public LoginResponse(String access_token) {
+    public LoginResponse(String access_token, String refresh_token) {
         this.access_token = access_token;
+        this.refresh_token = refresh_token;
     }
 }

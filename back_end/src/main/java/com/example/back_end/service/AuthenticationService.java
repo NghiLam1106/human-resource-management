@@ -46,8 +46,18 @@ public class AuthenticationService {
             throw new AppException(ErrorCode.INVALID_CREDENTIALS);
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        final String token = jwtGenerator.generateToken(authentication);
-        return new LoginResponse(token);
+        String usernames = authentication.getName();
+        final String token = jwtGenerator.generateToken(usernames);
+        final String refreshToken = jwtGenerator.generateRefreshToken(usernames);
+        return new LoginResponse(token, refreshToken);
+    }
+
+    public String refreshToken(String refreshToken) {
+        if (jwtGenerator.validateRefreshToken(refreshToken)) {
+            String username = jwtGenerator.getUsernameFromToken(refreshToken);
+            return jwtGenerator.generateToken(username);
+        }
+        return null;
     }
 
     public RegisterResponse register(RegisterRequest request) {
